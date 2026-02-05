@@ -35,80 +35,75 @@ def get_skill(category: str) -> str:
             return f.read()
     return ""
 
+# Attempt imports for specific providers
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
+
 class VLMService:
     """
     VLM service for different models (API Based).
     """
-    model_url = {
-        "Qwen-VL-Max": "https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation",
-        "GPT-4o": "https://api.openai.com/v1/chat/completions",
+    model_config = {
+        "qvq-72b-preview": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "api_key_env": "VLM_API_KEY"},
+        "qwen2.5-math-1.5b-instruct": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "api_key_env": "VLM_API_KEY"}, # User example model
+        "qwen3-vl-plus": {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "api_key_env": "VLM_API_KEY"},
     }
     
     def __init__(self, model_name: str) -> None:
         self.model_name = model_name
-        self.api_key = os.getenv("VLM_API_KEY")
-    
+        self.config = self.model_config.get(model_name)
+        
+        # Fallback to DashScope compatible defaults if model not explicitly in map but likely Qwen
+        if not self.config:
+            if "qwen" in model_name.lower():
+                 self.config = {"base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1", "api_key_env": "VLM_API_KEY"}
+            else:
+                 # Default to OpenAI standard
+                 self.config = {"base_url": "https://api.openai.com/v1", "api_key_env": "VLM_API_KEY"}
+
+        self.api_key = os.getenv(self.config["api_key_env"])
+        if not self.api_key:
+             # Try fallback to specific env requested by user usage example
+             self.api_key = os.getenv("DASHSCOPE_API_KEY") 
+
     def _image_to_base64(self, image: Image.Image) -> str:
         buffered = io.BytesIO()
         image.save(buffered, format="PNG")
         return base64.b64encode(buffered.getvalue()).decode("utf-8")
 
     def generate_text(self, prompt: str, images: Optional[List[Image.Image]] = None) -> str:
-        url = self.model_url.get(self.model_name)
-        if not url:
-            return json.dumps({"error": "Model URL not found"})
+        if not OpenAI:
+            return json.dumps({"error": "openai library not installed. Install with `pip install openai`"})
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}"
-        }
-
-        # Handle different API formats (simplified OpenAI-like vs DashScope)
-        if "openai" in url or "GPT" in self.model_name:
-            payload = {
-                "model": self.model_name.lower(),
-                "messages": [{
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt}
-                    ]
-                }]
-            }
+        try:
+            client = OpenAI(
+                api_key=self.api_key,
+                base_url=self.config["base_url"]
+            )
+            
+            messages = [{
+                "role": "user", 
+                "content": [{"type": "text", "text": prompt}]
+            }]
+            
+            # Append images if provided
             if images:
                 for img in images:
                     b64_image = self._image_to_base64(img)
-                    payload["messages"][0]["content"].append({
+                    messages[0]["content"].append({
                         "type": "image_url",
                         "image_url": {"url": f"data:image/png;base64,{b64_image}"}
                     })
-        else:
-            # DashScope format as fallback/default for Qwen-VL-Max
-            payload = {
-                "model": self.model_name,
-                "input": {
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": [{"text": prompt}]
-                        }
-                    ]
-                }
-            }
-            if images:
-                for img in images:
-                    b64_image = self._image_to_base64(img)
-                    payload["input"]["messages"][0]["content"].append({"image": f"data:image/png;base64,{b64_image}"})
 
-        try:
-            response = requests.post(url, headers=headers, json=payload)
-            response.raise_for_status()
-            res_data = response.json()
-            # Extract content based on API
-            if "choices" in res_data:
-                return res_data["choices"][0]["message"]["content"]
-            elif "output" in res_data:
-                return res_data["output"]["choices"][0]["message"]["content"][0]["text"]
-            return json.dumps(res_data)
+            completion = client.chat.completions.create(
+                model=self.model_name,
+                messages=messages
+            )
+            
+            return completion.choices[0].message.content
+
         except Exception as e:
             return json.dumps({"error": str(e)})
 

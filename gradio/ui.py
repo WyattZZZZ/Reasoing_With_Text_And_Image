@@ -3,8 +3,8 @@ import os
 
 # Model configurations
 MODELS = {
-    "VLM": ["Qwen2-VL-7B-Instruct", "GPT-4o"],
-    "Text-to-Image": ["Stable Diffusion 3", "Flux.1-Dev", "Midjourney-v6"]
+    "VLM": ["qvq-72b-preview", "qwen2.5-math-1.5b-instruct", "qwen3-vl-plus", "Qwen2-VL-7B-Instruct"],
+    "Text-to-Image": ["Flux", "HuggingFace-fal"]
 }
 
 def create_ui(process_callback):

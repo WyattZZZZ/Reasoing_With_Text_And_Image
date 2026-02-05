@@ -5,7 +5,6 @@ import time
 
 # Ensure the path is set up to find modules
 sys.path.append(os.getcwd())
-
 from gradio.ui import create_ui
 from VLM.vlm import VlmAgent, VlmModel
 from VLM.service import VLMService, LocalVLMService
@@ -26,7 +25,7 @@ async def agent_execution(message, vlm_model_name, image_model_name):
     image_service = ImageService(image_api_call)
     
     # VlmAgent init: (VLM_model, image_service, question)
-    agent = VlmAgent(vlm_model, image_service, user_text)
+    agent = VlmAgent(vlm_model, image_service)
     
     # Run the agent
     for step in agent.run(user_text):
