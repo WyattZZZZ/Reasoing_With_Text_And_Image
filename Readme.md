@@ -2,6 +2,12 @@
 
 ## 0. Overview
 
+### Quick Start
+
+```bash
+./start.sh
+```
+
 ## 1. Architecture
 
 ![image](./assets/architecture.png)
