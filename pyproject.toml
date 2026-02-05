@@ -1,0 +1,20 @@
+[project]
+name = "reasoningwithtextandimage"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.12.0",
+    "bitsandbytes>=0.49.1",
+    "einops>=0.8.2",
+    "gradio>=6.5.1",
+    "pillow>=12.1.0",
+    "python-dotenv>=1.2.1",
+    "qwen-vl-utils>=0.0.14",
+    "requests>=2.32.5",
+    "sentencepiece>=0.2.1",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
+    "transformers>=5.0.0",
+]
