@@ -51,5 +51,5 @@ async def agent_execution(message, vlm_model_name, image_model_name):
 
 if __name__ == "__main__":
     print("Starting ReasoningWithTextAndImage Application...")
-    demo = ui.create_ui(process_callback=agent_execution)
+    demo = create_ui(process_callback=agent_execution)
     demo.launch()
