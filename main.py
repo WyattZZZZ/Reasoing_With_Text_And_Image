@@ -5,7 +5,7 @@ import time
 
 # Ensure the path is set up to find modules
 sys.path.append(os.getcwd())
-from gradio.ui import create_ui
+from ui_app.ui import create_ui
 from VLM.vlm import VlmAgent, VlmModel
 from VLM.service import VLMService, LocalVLMService
 from Image.service import ImageService, ImageApiCall
@@ -51,5 +51,5 @@ async def agent_execution(message, vlm_model_name, image_model_name):
 
 if __name__ == "__main__":
     print("Starting ReasoningWithTextAndImage Application...")
-    demo = create_ui(process_callback=agent_execution)
+    demo = ui.create_ui(process_callback=agent_execution)
     demo.launch()
