@@ -83,7 +83,8 @@ The project follows a modular design separating the UI, Agent logic, and Service
 
 ### Image Generation (T2I)
 
-- **Flux (DashScope)**: High-quality image synthesis.
+- **QWEN-Image (DashScope)**: High-quality image synthesis.
+- **Wan (DashScope)**: High-quality image synthesis.
 - **HuggingFace-fal**: Access to GLM-Image and other HF-hosted models.
 
 ## 📄 License
