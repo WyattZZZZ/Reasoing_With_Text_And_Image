@@ -184,20 +184,22 @@ class VlmAgent:
                 try:
                     response = json.loads(full_response)
                     parsed = True
-                except:
+                except json.JSONDecodeError as e:
                     # Simple heuristic if JSON is wrapped in backticks
+                    logger.warning(f"JSON Parse failed on attempt {attempt+1} {e.msg}")
                     if "```json" in full_response:
                         try:
                             json_str = full_response.split("```json")[1].split("```")[0].strip()
                             response = json.loads(json_str)
                             parsed = True
-                        except:
+                        except json.JSONDecodeError:
+                            logger.warning(f"JSON Parse failed on because {e.msg}")
                             pass
                 
                 if parsed:
                     break
                 
-                logger.warning(f"JSON Parse failed on attempt {attempt+1}")
+                logger.warning(f"JSON Parse failed on attempt {attempt+1} {full_response}")
             
             if not response:
                  # Fallback if all retries fail
@@ -274,7 +276,6 @@ class VlmAgent:
 class VlmModel:
     Model_service = {
         "qwen2-vl": LocalVLMService,
-        "gpt-4o": VLMService,
     }
     def __init__(self, model_name: str) -> None:
         self.model_name = model_name

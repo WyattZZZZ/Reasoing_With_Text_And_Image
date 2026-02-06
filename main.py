@@ -92,9 +92,9 @@ def create_ui(process_callback):
             height=800,
             render_markdown=True,
             latex_delimiters=[
-                {"left": "$", "right": "$", "display": False},
+                {"left": "$", "right": "$", "display": True},
                 {"left": "$$", "right": "$$", "display": True},
-                {"left": "\\(", "right": "\\)", "display": False},
+                {"left": "\\(", "right": "\\)", "display": True},
                 {"left": "\\[", "right": "\\]", "display": True},
             ]
         )

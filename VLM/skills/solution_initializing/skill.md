@@ -9,7 +9,7 @@ When initializing a solution, always include:
 2. **Requirement Extraction**: List all constraints, given values, and target metrics.
 3. **Strategic Planning**: Outline the necessary stages and tools to reach the solution using a TODO list format (e.g., `- [ ] Task`). Mark completed steps with `[x]`.
 4. **Visualization Ideas (Must)**: List ideas for images to generate using the drawing tool. Format: `- Image Name: Image Prompt`.
-5. **Initial Hypothesis**: State if any immediate patterns or obvious first steps are visible.
+5. **Initial Hypothesis**: State if any immediate patterns or obvious first steps are visible, but do not generate the solution.
 6. **Constraints (Must)**: You are only initializing the solution by planning. After generating this plan, you MUST switch to the 'Reasoning' or 'Execution' skill in the next step to begin the actual work. Do not stay in solution_initializing.
 
 Focus on clarity and scope definition. Set the stage for the reasoning and derivation phases.

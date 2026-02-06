@@ -199,7 +199,8 @@ class LocalVLMService(VLMService):
         from transformers import TextIteratorStreamer
         from threading import Thread
 
-        messages = [{"role": "user", "content": [{"type": "text", "text": prompt}]}]
+        logger.info(f"VLM Stream Request Start: model={self.model_name}, prompt_length={prompt}, num_images={len(images) if images else 0}")
+        messages = [{"role": "system", "content": [{"type": "text", "text": prompt}]}]
         if images:
             for img in images:
                 messages[0]["content"].insert(0, {"type": "image", "image": img})
@@ -211,7 +212,7 @@ class LocalVLMService(VLMService):
         else:
             inputs = self._processor(text=[text], padding=True, return_tensors="pt").to(self.device)
 
-        streamer = TextIteratorStreamer(self._processor.tokenizer, skip_special_tokens=True)
+        streamer = TextIteratorStreamer(self._processor.tokenizer, skip_special_tokens=True, skip_prompt=True)
         generation_kwargs = dict(inputs, streamer=streamer, max_new_tokens=512)
         
         thread = Thread(target=self._model.generate, kwargs=generation_kwargs)
