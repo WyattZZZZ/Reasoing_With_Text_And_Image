@@ -31,7 +31,7 @@ Create a `.ENV` file based on `.ENV.example` and add your API keys:
 
 ```
 DASHSCOPE_API_KEY=your_dashscope_api_key
-HUGGINGFACE_API_KEY=your_huggingface_api_key
+HF_TOKEN=your_huggingface_api_key
 VLM_API_KEY=your_vlm_api_key # optional, only if you want to use local models
 ```
 
