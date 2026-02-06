@@ -4,15 +4,18 @@ An advanced Multimodal Reasoning Agent explorer featuring iterative thinking, se
 
 ## 🚀 Quick Start
 
-### Using uv (Recommended)
+### Using uv (Recommended) To Install [UV](https://github.com/astral-sh/uv)
+
 1. **Setup & Run**:
    ```bash
    uv run main.py
    ```
-   *`uv` will automatically handle environment creation and dependency installation.*
+   _`uv` will automatically handle environment creation and dependency installation._
 
 ### Using pip
+
 1. **Install Dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -23,11 +26,21 @@ An advanced Multimodal Reasoning Agent explorer featuring iterative thinking, se
    ```
 
 ## ⚙️ Configuration
+
 Create a `.ENV` file based on `.ENV.example` and add your API keys:
+
+```
+DASHSCOPE_API_KEY=your_dashscope_api_key
+HUGGINGFACE_API_KEY=your_huggingface_api_key
+VLM_API_KEY=your_vlm_api_key # optional, only if you want to use local models
+```
+
+BTW, you can get the API key from [DashScope](https://help.aliyun.com/zh/dashscope/get-started/quick-start) and [HuggingFace](https://huggingface.co/settings/tokens).
+_DASHSCOPE_API_KEY = VLM_API_KEY_ they are the same.
 
 ## 🧠 Key Features
 
-- **Iterative Reasoning**: Uses a "Think-Act-Step" loop with specific skills like `reasoning`, `check`, and `solution_initializing`.
+- **Iterative Reasoning**: Uses a "Think-Act-Step" loop with specific skills like `reasoning`, `check`, `solution_initializing`, and `response`.
 - **Multimodal Feedback**: The agent can generate images to aid its own visual reasoning or verify its output.
 - **Parallel Tool Execution**: Uses a synchronous threaded architecture (`ThreadPoolExecutor`) to run multiple tools (image generation, memory retrieval) simultaneously.
 - **Memory Management**: Structured conversation history that tracks stages, messages, and multiple image objects.
@@ -39,7 +52,7 @@ The project follows a modular design separating the UI, Agent logic, and Service
 
 - **Frontend**: Built with **Gradio**, providing a real-time "Thinking" visualization and chatbot experience.
 - **Agent Core (`VLM/`)**: Manages the reasoning state machine and skill selection.
-- **Service Layer**: 
+- **Service Layer**:
   - **VLM Service**: Uses the OpenAI SDK to interface with DashScope and OpenAI models.
   - **Image Service**: Direct integration with DashScope (Flux) and HuggingFace Hub (InferenceClient).
 
@@ -62,14 +75,17 @@ The project follows a modular design separating the UI, Agent logic, and Service
 ## 🤖 Supported Models
 
 ### Multimodal Reasoning (VLM)
+
 - **qvq-72b-preview**: High-performance reasoning model.
 - **qwen2.5-math-1.5b-instruct**: Remote reasoning model.
 - **qwen3-vl-plus**: Remote vision-language reasoning model.
 - **qwen2-VL-7B-Instruct**: Local vision-language reasoning model.
 
 ### Image Generation (T2I)
+
 - **Flux (DashScope)**: High-quality image synthesis.
 - **HuggingFace-fal**: Access to GLM-Image and other HF-hosted models.
 
 ## 📄 License
+
 MIT

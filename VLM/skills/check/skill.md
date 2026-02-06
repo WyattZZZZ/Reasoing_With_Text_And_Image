@@ -11,5 +11,10 @@ When you use the **check** skill, it indicates that you have identified errors i
 3. **Incorrect Task Completion**: If you find that a task in a TODO list (e.g., `- [x] Task`) is marked as completed but is actually incorrect or incomplete, you should re-output the TODO list and uncheck the incorrect items (e.g., `- [ ] Task`) to ensure the status accurately reflects the progress.
 4. **Other Errors**: If the error is not related to the previous step, which means it only happens in your input, you should fix it by yourself and output the fixed input to the next step.
 
+You must choose at least one of the following options to continue:
+- Use the drawing tool to generate images by including the following format in your output: `- Image Name: Image Prompt`.
+- Use the get all memory tool to retrieve all previous conversation history by adding `- Request of Calling Get All Memory Tool` to your response.
+- Fix the error by yourself and output the fixed input to the next step.
+
 Always ensure that the correction process is explicit and addresses the root cause of the identified error.
 ```

@@ -1,5 +1,3 @@
-import base64
-import io
 from PIL import Image
 from dataclasses import dataclass
 from typing import Dict, List, Any
@@ -9,19 +7,26 @@ class Memory:
     SkillSelection: str
     Stage: str
     Message: str
-    Images: List[str] # List of Base64 strings
+    Images: List[Image.Image] # List of PIL Images
 
 class MemoryService:
-    def __init__(self, question: str) -> None:
+    def __init__(self, input: Dict[str, Any]) -> None:
         self.memory: List[Memory] = []
-        self.question = question
+        self.input = input
         self.init_memory()
 
     def init_memory(self) -> None:
-        self.memory.append(Memory(SkillSelection="", Stage="Initializing", Message=self.question, Images=[]))
+        self.memory.append(Memory(
+            SkillSelection="", 
+            Stage="Initializing",
+            Message=self.input.get("text", ""),
+            Images=self.input.get("files", []) # Already PIL Images from main.py
+        ))
 
-    def append_message(self, message: str) -> None:
-        self.memory.append(Memory(SkillSelection="", Stage="", Message=message, Images=[]))
+    def append_message(self, message: Any) -> None:
+        if isinstance(message, list):
+            message = "\n".join([str(m) for m in message])
+        self.memory.append(Memory(SkillSelection="", Stage="", Message=str(message), Images=[]))
 
     def update_memory_skill_stage(self, skill: str, stage: str) -> None:
         """
@@ -31,28 +36,22 @@ class MemoryService:
             self.memory[-1].SkillSelection = skill
             self.memory[-1].Stage = stage
 
-    def append_image(self, image_bytes: bytes) -> None:
+    def append_image(self, image: Image.Image) -> None:
         """
-        Add a new image to the current memory entry.
+        Add a new PIL image to the current memory entry.
         """
         if self.memory:
-            img_b64 = base64.b64encode(image_bytes).decode("utf-8") if image_bytes else ""
-            if img_b64:
-                self.memory[-1].Images.append(img_b64)
+            if image:
+                self.memory[-1].Images.append(image)
 
-    def update_message(self, message: str) -> None:
+    def update_message(self, message: Any) -> None:
         """
         Update memory with new message.
         """
         if self.memory:
-            self.memory[-1].Message = message
-
-    def _b64_to_pil(self, b64_str: str) -> Any:
-        if not b64_str:
-            return None
-        # Base64 to PIL Image
-        img_data = base64.b64decode(b64_str)
-        return Image.open(io.BytesIO(img_data))
+            if isinstance(message, list):
+                message = "\n".join([str(m) for m in message])
+            self.memory[-1].Message = str(message)
 
     def get_latest_memory(self) -> Dict[str, Any]:
         if not self.memory:
@@ -62,7 +61,7 @@ class MemoryService:
             "SkillSelection": data.SkillSelection,
             "Stage": data.Stage,
             "Message": data.Message,
-            "Images": [self._b64_to_pil(img) for img in data.Images]
+            "Images": data.Images
         }
 
     def get_all_memory(self) -> Dict[str, Any]:
@@ -77,10 +76,9 @@ class MemoryService:
         # Collect all images across all memory entries
         all_images = []
         for m in self.memory:
-            for img_b64 in m.Images:
-                pil_img = self._b64_to_pil(img_b64)
-                if pil_img:
-                    all_images.append(pil_img)
+            for img in m.Images:
+                if img:
+                    all_images.append(img)
         
         return {
             "SkillSelection": self.memory[-1].SkillSelection,

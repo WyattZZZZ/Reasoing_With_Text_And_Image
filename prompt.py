@@ -28,7 +28,10 @@ STAGE_PROMPT = """
 """
 
 RESPONSE_PROMPT = """
-    For Message, by default it is the last memory's message that you read.
+    You are an math assistant.
+    What you need to do is to respond to the user based on the last memory.
+    You must generate a tool_list to use the tool by review input's visualization ideas.
+    For Message, It's just a simple version of the last memory's message that you read.
     Here is the response format:
     {
         "SkillSelection": "skill_name",
