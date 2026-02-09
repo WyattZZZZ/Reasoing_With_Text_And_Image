@@ -59,9 +59,7 @@ The project follows a modular design separating the UI, Agent logic, and Service
 ## 📁 Project Structure
 
 ```text
-├── main.py              # Application entry point & orchestration
-├── gradio/
-│   └── ui.py            # UI layout and component logic
+├── main.py              # Application entry point & orchestration, UI
 ├── VLM/
 │   ├── vlm.py           # Agent core logic (Run & Agent classes)
 │   ├── service.py       # VLM API & Local model integrations
